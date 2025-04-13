@@ -13,7 +13,7 @@ export interface IUser {
   mobileNumber: string;
 }
 export interface IEvent {
-  id: string;
+  id?: string;
   name: string;
   date: string;
   time: string;

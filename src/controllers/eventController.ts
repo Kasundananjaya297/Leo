@@ -1,13 +1,15 @@
 /** @format */
 
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 import {
   createEventService,
   findAllEventsService,
   findEventByDateService,
   findEventByIdService,
+  updateEventService,
 } from "../services/EventService";
 import { IEvent } from "../interfaces";
+import { isValidObjectId } from "mongoose";
 
 const createEventController = async (
   req: Request,
@@ -42,6 +44,11 @@ const findEventByIdController = async (
   next: NextFunction,
 ) => {
   const eventId = req.params.id;
+  //validate eventId as mongo db ID
+  if (!isValidObjectId(eventId)) {
+    res.status(400).json({ message: "Invalid event ID" });
+    return;
+  }
   try {
     if (!eventId) {
       res.status(400).json({ message: "Event ID is required" });
@@ -100,9 +107,39 @@ const findEventByDateController = async (
     return;
   }
 };
+const updateEventController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const eventId = req.params.id;
+  const event = req.body as IEvent;
+  if (!eventId || !event) {
+    res.status(400).json({ message: "Event ID and details are required" });
+    return;
+  }
+  try {
+    const updatedEvent = await updateEventService(eventId, event);
+    if (updatedEvent && updatedEvent.success === false) {
+      res.status(500).json({ message: updatedEvent.message });
+    } else {
+      res.status(200).json({
+        success: true,
+        event: updatedEvent,
+        message: "Event updated successfully",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update event" });
+    console.error("Error updating event", error);
+    return;
+  }
+};
+
 export {
   createEventController,
   findEventByIdController,
   findAllEventsController,
   findEventByDateController,
+  updateEventController
 };

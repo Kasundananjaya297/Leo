@@ -1,4 +1,5 @@
 /** @format */
+import { isValidObjectId } from "mongoose";
 import { IEvent } from "../interfaces";
 import * as eventRepo from "../repos/eventsRepo";
 
@@ -90,9 +91,49 @@ const findEventByDateService = async (date: string) => {
   }
 };
 
+const updateEventService = async (id: string, event: IEvent) => {
+  try {
+    if (!isValidObjectId(id)) {
+      return {
+        message: "Invalid event ID",
+        success: false,
+        data: [],
+      };
+    }
+    const isExistingEvent = await eventRepo.findEventByIdRepo(id);
+    if (!isExistingEvent) {
+      return {
+        message: "Event not found",
+        success: false,
+        data: [],
+      };
+    }
+    const updatedEvent = await eventRepo.updateEventRepo(id, event);
+    if (!updatedEvent) {
+      return {
+        message: "Failed to update event",
+        success: false,
+        data: [],
+      };
+    }
+    return {
+      message: "Event updated successfully",
+      success: true,
+      data: updatedEvent,
+    };
+  } catch (error) {
+    return {
+      message: "Error updating event",
+      success: false,
+      data: [],
+    };
+  }
+};
+
 export {
   createEventService,
   findEventByIdService,
   findAllEventsService,
   findEventByDateService,
+  updateEventService,
 };

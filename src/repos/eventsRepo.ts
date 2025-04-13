@@ -14,7 +14,7 @@ const createEventRepo = async (event: IEvent) => {
 
 const findEventByIdRepo = async (id: string) => {
   try {
-    const event = await Events.find({ id });
+    const event = await Events.find({ _id: id });
     if (event.length === 0) {
       return null;
     }
@@ -43,10 +43,24 @@ const findEventByDateRepo = async (date: string) => {
     return events;
   } catch (error) {}
 };
+const updateEventRepo = async (id: string, event: IEvent) => {
+  try {
+    const updateEvent = await Events.findByIdAndUpdate(id, event, {
+      new: true,
+    });
+    if (!updateEvent) {
+      return null;
+    }
+    return updateEvent;
+  } catch (error) {
+    throw new Error("Error updating event");
+  }
+};
 
 export {
   createEventRepo,
   findEventByIdRepo,
   findAllEventsRepo,
   findEventByDateRepo,
+  updateEventRepo,
 };
