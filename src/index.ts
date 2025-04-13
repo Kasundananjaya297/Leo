@@ -2,6 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import userRouts from "./routs/userRouts";
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ app.get("/info", async (req, res) => {
     DATABASE_URL: process.env.DB_URL,
   });
 });
+
+// routes
+app.use("/api/v1/users", userRouts);
 
 mongoose
   .connect(DB_URL)
