@@ -44,3 +44,11 @@ export interface IBooking {
   avenue: string;
   status: string;
 }
+export interface IEvaluation{
+  id?: string;
+  name: string;
+  description: string;
+  content: string;
+  featuredImage: string;
+  month: string;
+}

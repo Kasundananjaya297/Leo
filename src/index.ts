@@ -6,6 +6,7 @@ import userRouts from "./routs/userRouts";
 import eventRouts from "./routs/eventRouts";
 import achivementRouts from "./routs/achivementRouts";
 import bookingRouts from "./routs/bookingRouts";
+import evaluationRouts from "./routs/evaluationRouts";
 
 dotenv.config();
 
@@ -31,6 +32,10 @@ app.use("/api/v1/users", userRouts);
 app.use("/api/v1/events", eventRouts);
 app.use("/api/v1/achivements", achivementRouts);
 app.use("/api/v1/dateBooking", bookingRouts);
+app.use("/api/v1/evaluations", evaluationRouts);
+app.use((req, res, next) => {
+  res.status(404).send({ message: "Route not found" });
+});
 
 mongoose
   .connect(DB_URL)
