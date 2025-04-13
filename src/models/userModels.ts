@@ -5,6 +5,7 @@ interface IUser extends Document {
   email: string;
   name: string;
   lastName: string;
+  dob: string;
   studentId: string;
   faculty: string;
   department: string;
@@ -19,6 +20,7 @@ const userSchema: Schema = new Schema(
     email: { type: String, require: true, unique: true },
     name: { type: String, require: true },
     role: { type: String, require: true },
+    dob: { type: String, require: true },
     password: { type: String, require: true },
     lastName: { type: String, require: true },
     studentId: { type: String, require: true, unique: true },
