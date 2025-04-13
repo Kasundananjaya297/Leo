@@ -1,5 +1,4 @@
 /** @format */
-
 import { IUser } from "../interfaces";
 import bcrypt from "bcrypt";
 import { findUserByEmailRepo } from "../repos/userRepo";
@@ -10,7 +9,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const jwtSecret = process.env.JWT_SECRET as string;
-
 const soltRounds = 10;
 
 const loginService = async (email: string, password: string) => {

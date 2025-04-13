@@ -25,6 +25,5 @@ export const authMiddleware = (
       console.log("Action Detected from ", decoded.email);
     }
   }
-
   next();
 };
