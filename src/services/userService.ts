@@ -99,5 +99,111 @@ const createUserService = async (userDetail: IUser) => {
     return { success: "false", message: "Failed to add user" };
   }
 };
-
-export { loginService, createUserService };
+const findUserByStudentIdService = async (studentId: string) => {
+  try {
+    const user = await userRepo.findUserByStudentIdRepo(studentId);
+    if (!user) {
+      return {
+        message: "User not found",
+        success: false,
+      };
+    }
+    return {
+      message: "User found",
+      success: true,
+      data: user,
+    };
+  } catch (error) {
+    console.error("Error in findUserByStudentIdService", error);
+    return {
+      message: "Failed to find user",
+      success: false,
+    };
+  }
+};
+const findAllUsersService = async () => {
+  try {
+    const users = await userRepo.findAllUsersRepo();
+    if (!users) {
+      return {
+        message: "No users found",
+        success: false,
+      };
+    }
+    return {
+      message: "Users found",
+      success: true,
+      data: users,
+    };
+  } catch (error) {
+    console.error("Error in findAllUsersService", error);
+    return {
+      message: "Failed to find users",
+      success: false,
+    };
+  }
+};
+const updateUserByIdService = async (id: string, user: IUser) => {
+  try {
+    const updatedUser = await userRepo.updateUserByIdRepo(id, user);
+    if (!updatedUser) {
+      return {
+        message: "User not found",
+        success: false,
+      };
+    }
+    return {
+      message: "User updated successfully",
+      success: true,
+      data: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error in updateUserByIdService", error);
+    return {
+      message: "Failed to update user",
+      success: false,
+    };
+  }
+};
+const deleteUserByIdService = async (id: string) => {
+  try {
+    const deletedUser = await userRepo.deleteUserByIdRepo(id);
+    if (!deletedUser) {
+      return {
+        message: "User not found",
+        success: false,
+      };
+    }
+    return {
+      message: "User deleted successfully",
+      success: true,
+      data: deletedUser,
+    };
+  } catch (error) {
+    console.error("Error in deleteUserByIdService", error);
+    return {
+      message: "Failed to delete user",
+      success: false,
+    };
+  }
+};
+const findByUserIDService = async (userID: string) => {
+  try {
+    const user = await userRepo.findUserByIdRepo(userID);
+    if (!user) {
+      return { message: "User not found", success: false };
+    }
+    return { message: "User found", success: true, data: user };
+  } catch (error) {
+    return { message: "Failed to find user", success: false };
+  }
+};
+export {
+  loginService,
+  createUserService,
+  findUserByStudentIdService,
+  findAllUsersService,
+  updateUserByIdService,
+  deleteUserByIdService,
+  findByUserIDService,
+};
