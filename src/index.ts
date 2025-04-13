@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouts from "./routs/userRouts";
+import eventRouts from "./routs/eventRouts";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.get("/info", async (req, res) => {
 
 // routes
 app.use("/api/v1/users", userRouts);
+app.use("/api/v1/events", eventRouts);
 
 mongoose
   .connect(DB_URL)
