@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   createEventService,
   findAllEventsService,
+  findEventByDateService,
   findEventByIdService,
 } from "../services/EventService";
 import { IEvent } from "../interfaces";
@@ -76,8 +77,32 @@ const findAllEventsController = async (
     return;
   }
 };
+const findEventByDateController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const eventDate = req.params.date;
+  try {
+    if (!eventDate) {
+      res.status(400).json({ message: "Event date is required" });
+      return;
+    }
+    const events = await findEventByDateService(eventDate);
+    if (events && events.success === false) {
+      res.status(500).json({ message: events.message });
+    } else {
+      res.status(200).json({ success: true, events });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to find events" });
+    console.error("Error finding events", error);
+    return;
+  }
+};
 export {
   createEventController,
   findEventByIdController,
   findAllEventsController,
+  findEventByDateController,
 };

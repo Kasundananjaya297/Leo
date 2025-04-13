@@ -34,5 +34,19 @@ const findAllEventsRepo = async () => {
     throw new Error("Error finding all events");
   }
 };
+const findEventByDateRepo = async (date: string) => {
+  try {
+    const events = await Events.find({ date });
+    if (events.length === 0) {
+      return null;
+    }
+    return events;
+  } catch (error) {}
+};
 
-export { createEventRepo, findEventByIdRepo, findAllEventsRepo };
+export {
+  createEventRepo,
+  findEventByIdRepo,
+  findAllEventsRepo,
+  findEventByDateRepo,
+};

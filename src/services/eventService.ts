@@ -66,4 +66,33 @@ const findAllEventsService = async () => {
   }
 };
 
-export { createEventService, findEventByIdService, findAllEventsService };
+const findEventByDateService = async (date: string) => {
+  try {
+    const events = await eventRepo.findEventByDateRepo(date);
+    if (!events) {
+      return {
+        message: "No events found for the given date",
+        success: false,
+        data: [],
+      };
+    }
+    return {
+      message: "Events found for the given date",
+      success: true,
+      data: events,
+    };
+  } catch (error) {
+    return {
+      message: "Error finding events by date",
+      success: false,
+      data: [],
+    };
+  }
+};
+
+export {
+  createEventService,
+  findEventByIdService,
+  findAllEventsService,
+  findEventByDateService,
+};
