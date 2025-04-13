@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post("/save", eventController.createEventController);
 router.get("/:id", eventController.findEventByIdController);
+router.get("/", eventController.findAllEventsController);
 
 export default router;

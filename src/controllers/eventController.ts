@@ -3,6 +3,7 @@
 import { Request, Response, NextFunction } from "express";
 import {
   createEventService,
+  findAllEventsService,
   findEventByIdService,
 } from "../services/EventService";
 import { IEvent } from "../interfaces";
@@ -57,4 +58,26 @@ const findEventByIdController = async (
     return;
   }
 };
-export { createEventController, findEventByIdController };
+const findAllEventsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const events = await findAllEventsService();
+    if (events && events.success === false) {
+      res.status(500).json({ message: events.message });
+    } else {
+      res.status(200).json({ success: true, events });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to find events" });
+    console.error("Error finding events", error);
+    return;
+  }
+};
+export {
+  createEventController,
+  findEventByIdController,
+  findAllEventsController,
+};
