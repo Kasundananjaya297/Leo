@@ -129,6 +129,44 @@ const updateEventService = async (id: string, event: IEvent) => {
     };
   }
 };
+const deleteEventService = async (id: string) => {
+  try {
+    if (!isValidObjectId(id)) {
+      return {
+        message: "Invalid event ID",
+        success: false,
+        data: [],
+      };
+    }
+    const isExistingEvent = await eventRepo.findEventByIdRepo(id);
+    if (!isExistingEvent) {
+      return {
+        message: "Event not found",
+        success: false,
+        data: [],
+      };
+    }
+    const deletedEvent = await eventRepo.deleteEventRepo(id);
+    if (!deletedEvent) {
+      return {
+        message: "Failed to delete event",
+        success: false,
+        data: [],
+      };
+    }
+    return {
+      message: "Event deleted successfully",
+      success: true,
+      data: deletedEvent,
+    };
+  } catch (error) {
+    return {
+      message: "Error deleting event",
+      success: false,
+      data: [],
+    };
+  }
+};
 
 export {
   createEventService,
@@ -136,4 +174,5 @@ export {
   findAllEventsService,
   findEventByDateService,
   updateEventService,
+  deleteEventService,
 };

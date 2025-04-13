@@ -25,3 +25,10 @@ export interface IEvent {
   featuredImage: string;
   images: string[];
 }
+export interface IAchivement {
+  id?: string;
+  name: string;
+  description: string;
+  content: string;
+  featuredImage: string;
+}

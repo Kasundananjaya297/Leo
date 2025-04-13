@@ -56,11 +56,22 @@ const updateEventRepo = async (id: string, event: IEvent) => {
     throw new Error("Error updating event");
   }
 };
-
+const deleteEventRepo = async (id: string) => {
+  try {
+    const deleteEvent = await Events.findByIdAndDelete(id);
+    if (!deleteEvent) {
+      return null;
+    }
+    return deleteEvent;
+  } catch (error) {
+    throw new Error("Error deleting event");
+  }
+};
 export {
   createEventRepo,
   findEventByIdRepo,
   findAllEventsRepo,
   findEventByDateRepo,
   updateEventRepo,
+  deleteEventRepo,
 };

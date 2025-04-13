@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouts from "./routs/userRouts";
 import eventRouts from "./routs/eventRouts";
+import achivementRouts from "./routs/achivementRouts";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.get("/info", async (req, res) => {
 // routes
 app.use("/api/v1/users", userRouts);
 app.use("/api/v1/events", eventRouts);
+app.use("/api/v1/achivements", achivementRouts);
 
 mongoose
   .connect(DB_URL)

@@ -9,5 +9,6 @@ router.get("/:id", eventController.findEventByIdController);
 router.get("/", eventController.findAllEventsController);
 router.get("/date/:date", eventController.findEventByDateController);
 router.put("/:id", eventController.updateEventController);
+router.delete("/:id", eventController.deleteEventController);
 
 export default router;
