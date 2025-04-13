@@ -32,7 +32,13 @@ const loginService = async (email: string, password: string) => {
       return {
         message: "Login successful",
         success: true,
-        data: { token, role: user.role },
+        data: {
+          userID: user.studentId,
+          email: user.email,
+          role: user.role,
+          name: user.name,
+          token,
+        },
       };
     } else {
       console.warn(`Invalid password for user: ${email}`);
@@ -53,15 +59,26 @@ const loginService = async (email: string, password: string) => {
 const createUserService = async (userDetail: IUser) => {
   const hashPassword = await bcrypt.hash(userDetail.password, soltRounds);
   try {
-    const existingUser = await findUserByEmailRepo(userDetail.email);
+    let existingUser;
+    existingUser = await findUserByEmailRepo(userDetail.email);
+    existingUser = await userRepo.findUserByStudentIdRepo(userDetail.studentId);
     if (existingUser) {
       console.warn(`User Already Exists ${userDetail.email} `);
       return {
         message: "User Already Exists",
         success: false,
-        data: existingUser,
+        data: {
+          email: userDetail.email,
+          role: userDetail.role,
+          name: userDetail.name,
+        },
       };
     }
+    const token = Jwt.sign(
+      { email: userDetail.email, role: userDetail.role },
+      jwtSecret.toString(),
+      { expiresIn: "24h" },
+    );
     const user = new User({
       ...userDetail,
       password: hashPassword,
@@ -70,7 +87,13 @@ const createUserService = async (userDetail: IUser) => {
     return {
       message: "User Created Successfully",
       success: true,
-      data: user,
+      data: {
+        userID: userDetail.studentId,
+        email: userDetail.email,
+        role: userDetail.role,
+        name: userDetail.name,
+        token,
+      },
     };
   } catch (error) {
     return { success: "false", message: "Failed to add user" };

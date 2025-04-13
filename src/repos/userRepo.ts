@@ -19,4 +19,13 @@ const findUserByEmailRepo = async (email: string) => {
     throw new Error("Error finding user by email");
   }
 };
-export { createUserRepo, findUserByEmailRepo };
+const findUserByStudentIdRepo = async (studentId: string) => {
+  try {
+    const user = await User.find({ studentId });
+    return user;
+  } catch (error) {
+    throw new Error("Error finding user by studentId");
+  }
+};
+
+export { createUserRepo, findUserByEmailRepo, findUserByStudentIdRepo };

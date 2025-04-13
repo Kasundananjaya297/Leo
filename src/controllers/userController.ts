@@ -1,7 +1,7 @@
 /** @format */
 
 import { Request, Response, NextFunction } from "express";
-import { createUserService, loginService } from "../services/userServices";
+import { createUserService, loginService } from "../services/userService";
 import { responseDTO } from "../DTO/response";
 
 const userLogin = async (req: Request, res: Response, next: NextFunction) => {
