@@ -21,7 +21,7 @@ const findUserByEmailRepo = async (email: string) => {
 };
 const findUserByStudentIdRepo = async (studentId: string) => {
   try {
-    const user = await User.find({ studentId });
+    const user = await User.findOne({ studentId });
     return user;
   } catch (error) {
     throw new Error("Error finding user by studentId");
