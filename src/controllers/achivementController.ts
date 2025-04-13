@@ -8,10 +8,9 @@ import {
   findAchivementByIdService,
   updateAchivementByIdService,
 } from "../services/achivementService";
-
 import { IAchivement } from "../interfaces";
 import { isValidObjectId } from "mongoose";
-import { responseDTO } from "../DTO/response";
+
 
 const createAchivementController = async (
   req: Request,

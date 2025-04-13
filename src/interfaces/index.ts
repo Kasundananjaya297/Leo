@@ -32,3 +32,14 @@ export interface IAchivement {
   content: string;
   featuredImage: string;
 }
+
+export interface IBooking {
+  id?: string;
+  userId: string;
+  eventName: string;
+  venue: string;
+  date: string;
+  time: string;
+  avenue: string;
+  status: string;
+}
