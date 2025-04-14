@@ -33,7 +33,7 @@ const loginService = async (email: string, password: string) => {
         message: "Login successful",
         success: true,
         data: {
-          userID: user.studentId,
+          userID: user._id,
           email: user.email,
           role: user.role,
           name: user.name,
