@@ -3,10 +3,31 @@
 import { isValidObjectId } from "mongoose";
 import { IBooking } from "../interfaces";
 import * as bookingRepo from "../repos/bookingRepos";
+import * as notificationRepo from "../repos/notificatioRepo";
+import * as userRepo from "../repos/userRepo";
+import { INotification } from "../interfaces/index";
 
 const createBookingService = async (booking: IBooking) => {
   try {
     const newBooking = await bookingRepo.createBookingRepo(booking);
+    const vissbileUsersId = await userRepo.findByUserIdFromUserRoleRepo(
+      "Admin",
+    );
+    console.log("Vissible to user IDs", vissbileUsersId);
+    const notification: INotification = {
+      title: "Booking Created",
+      description: `Booking for ${booking.eventName} has been created successfully.`,
+      date: booking.date,
+      time: booking.time,
+      createdByUserId: booking.userId,
+      vissibleToUserIds:
+        vissbileUsersId && vissbileUsersId.length > 0
+          ? (vissbileUsersId as object[])
+          : [],
+      relatedEventId: newBooking.id,
+    };
+    await notificationRepo.createNotificationRepo(notification);
+    console.log("Notification created successfully", notification);
     return {
       message: "Booking created successfully",
       success: true,
@@ -86,6 +107,7 @@ const updateBookingStatusByIdService = async (id: string, status: string) => {
       id,
       status,
     );
+
     if (!updatedBooking) {
       return {
         message: "Booking not found",
@@ -93,6 +115,25 @@ const updateBookingStatusByIdService = async (id: string, status: string) => {
         data: null,
       };
     }
+    if (!updatedBooking) {
+      return {
+        message: "Booking not found",
+        success: false,
+        data: null,
+      };
+    }
+    const notification: INotification = {
+      title: "Booking Status Updated",
+      description: `Booking status has been updated to ${status}.`,
+      date: updatedBooking.date || "",
+      time: updatedBooking.time || "",
+      createdByUserId: "",
+      vissibleToUserIds: [updatedBooking.userId as unknown as object],
+      relatedEventId: id,
+    };
+    await notificationRepo.createNotificationRepo(notification);
+    console.log("Notification created successfully", notification);
+
     return {
       message: "Booking updated successfully",
       success: true,

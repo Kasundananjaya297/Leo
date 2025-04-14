@@ -7,6 +7,7 @@ import eventRouts from "./routs/eventRouts";
 import achivementRouts from "./routs/achivementRouts";
 import bookingRouts from "./routs/bookingRouts";
 import evaluationRouts from "./routs/evaluationRouts";
+import notificationRouts from "./routs/notificationRoutes";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use("/api/v1/events", eventRouts);
 app.use("/api/v1/achivements", achivementRouts);
 app.use("/api/v1/dateBooking", bookingRouts);
 app.use("/api/v1/evaluations", evaluationRouts);
+app.use("/api/v1/notifications", notificationRouts);
 app.use((req, res, next) => {
   res.status(404).send({ message: "Route not found" });
 });

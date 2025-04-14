@@ -44,11 +44,21 @@ export interface IBooking {
   avenue: string;
   status: string;
 }
-export interface IEvaluation{
+export interface IEvaluation {
   id?: string;
   name: string;
   description: string;
   content: string;
   featuredImage: string;
   month: string;
+}
+export interface INotification {
+  id?: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  createdByUserId: string;
+  vissibleToUserIds: object[];
+  relatedEventId?: string;
 }

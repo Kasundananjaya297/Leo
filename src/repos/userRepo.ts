@@ -71,6 +71,28 @@ const deleteUserByIdRepo = async (id: string) => {
     throw new Error("Error deleting user by id");
   }
 };
+const findByUserIdFromUserRoleRepo = async (role: string) => {
+  try {
+    const users = await User.find({ role });
+    if (users.length === 0) {
+      return null;
+    }
+    return users.map((user) => user._id);
+  } catch (error) {
+    throw new Error("Error finding user by role");
+  }
+};
+const findAllUserIdRepo = async () => {
+  try {
+    const users = await User.find();
+    if (users.length === 0) {
+      return null;
+    }
+    return users.map((user) => user._id);
+  } catch {
+    throw new Error("Error finding all user ids");
+  }
+};
 
 export {
   createUserRepo,
@@ -80,4 +102,6 @@ export {
   findAllUsersRepo,
   deleteUserByIdRepo,
   findUserByIdRepo,
+  findByUserIdFromUserRoleRepo,
+  findAllUserIdRepo,
 };
