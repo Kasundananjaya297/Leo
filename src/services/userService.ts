@@ -6,6 +6,7 @@ import User from "../models/userModels";
 import * as userRepo from "../repos/userRepo";
 import Jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import sendEmail from "./emailService";
 
 dotenv.config();
 const jwtSecret = process.env.JWT_SECRET as string;
@@ -15,6 +16,12 @@ const loginService = async (email: string, password: string) => {
   try {
     const user = await findUserByEmailRepo(email);
 
+    const sendMail = await sendEmail(
+      email,
+      "Login Notification",
+      "You have successfully logged in to your account",
+    );
+    console.log("Email sent successfully", sendMail);
     if (!user) {
       console.warn(`User not found with email: ${email}`);
       return {
@@ -84,6 +91,13 @@ const createUserService = async (userDetail: IUser) => {
       password: hashPassword,
     });
     await userRepo.createUserRepo(user);
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const sendMail = await sendEmail(
+      userDetail.email,
+      "Account Created",
+      `Your account has been created successfully. Your OTP is ${otp}`,
+    );
     return {
       message: "User Created Successfully",
       success: true,
@@ -92,6 +106,7 @@ const createUserService = async (userDetail: IUser) => {
         email: userDetail.email,
         role: userDetail.role,
         name: userDetail.name,
+        otp,
         token,
       },
     };
@@ -165,6 +180,47 @@ const updateUserByIdService = async (id: string, user: IUser) => {
     };
   }
 };
+const resetUserPasswordByIdService = async (
+  userID: string,
+  newPassWord: string,
+) => {
+  const hashPassword = await bcrypt.hash(newPassWord, soltRounds);
+  try {
+    const user = await userRepo.findUserByIdRepo(userID);
+    if (!user) {
+      return {
+        message: "User not found",
+        success: false,
+      };
+    }
+    const updatedUser = await userRepo.updateUserByIdRepo(userID, {
+      ...user,
+      password: hashPassword,
+    });
+    if (!updatedUser) {
+      return {
+        message: "Failed to update password",
+        success: false,
+      };
+    }
+    const sendMail = await sendEmail(
+      user.email,
+      "Password Reset",
+      "Your password has been reset successfully",
+    );
+    return {
+      message: "Password updated successfully",
+      success: true,
+      data: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error in resetUserPasswordByIdService", error);
+    return {
+      message: "Failed to reset password",
+      success: false,
+    };
+  }
+};
 const deleteUserByIdService = async (id: string) => {
   try {
     const deletedUser = await userRepo.deleteUserByIdRepo(id);
@@ -206,4 +262,5 @@ export {
   updateUserByIdService,
   deleteUserByIdService,
   findByUserIDService,
+  resetUserPasswordByIdService,
 };
