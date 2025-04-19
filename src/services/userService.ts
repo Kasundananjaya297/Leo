@@ -93,7 +93,7 @@ const createUserService = async (userDetail: IUser) => {
       ...userDetail,
       password: hashPassword,
     });
-    await userRepo.createUserRepo(user);
+    const createdUser = await userRepo.createUserRepo(user);
 
     const otp = Math.floor(100000 + Math.random() * 900000);
     await sendEmail(
@@ -105,7 +105,7 @@ const createUserService = async (userDetail: IUser) => {
       message: "User Created Successfully",
       success: true,
       data: {
-        userID: userDetail.studentId,
+        userID: createdUser._id,
         email: userDetail.email,
         role: userDetail.role,
         name: userDetail.name,
@@ -187,7 +187,6 @@ const resetUserPasswordByIdService = async (
   userID: string,
   newPassWord: string,
 ) => {
-  console.log("resetUserPasswordByIdService", userID, newPassWord);
   const hashPassword = await bcrypt.hash(newPassWord, soltRounds);
   try {
     const user = await userRepo.findUserByIdRepo(userID);
