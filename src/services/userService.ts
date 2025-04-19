@@ -16,12 +16,6 @@ const loginService = async (email: string, password: string) => {
   try {
     const user = await findUserByEmailRepo(email);
 
-    const sendMail = await sendEmail(
-      email,
-      "Login Notification",
-      "You have successfully logged in to your account",
-    );
-    console.log("Email sent successfully", sendMail);
     if (!user) {
       console.warn(`User not found with email: ${email}`);
       return {
@@ -36,6 +30,11 @@ const loginService = async (email: string, password: string) => {
         jwtSecret.toString(),
         { expiresIn: "24h" },
       );
+      await sendEmail(
+        email,
+        "Login Notification",
+        "You have successfully logged in to your account",
+      );
       return {
         message: "Login successful",
         success: true,
@@ -48,7 +47,11 @@ const loginService = async (email: string, password: string) => {
         },
       };
     } else {
-      console.warn(`Invalid password for user: ${email}`);
+      await sendEmail(
+        email,
+        "Login Attempt",
+        "Someone attempted to log in to your account with an invalid email.",
+      );
       return {
         message: "Invalid password",
         success: false,
@@ -93,7 +96,7 @@ const createUserService = async (userDetail: IUser) => {
     await userRepo.createUserRepo(user);
 
     const otp = Math.floor(100000 + Math.random() * 900000);
-    const sendMail = await sendEmail(
+    await sendEmail(
       userDetail.email,
       "Account Created",
       `Your account has been created successfully. Your OTP is ${otp}`,
@@ -184,6 +187,7 @@ const resetUserPasswordByIdService = async (
   userID: string,
   newPassWord: string,
 ) => {
+  console.log("resetUserPasswordByIdService", userID, newPassWord);
   const hashPassword = await bcrypt.hash(newPassWord, soltRounds);
   try {
     const user = await userRepo.findUserByIdRepo(userID);
@@ -194,16 +198,15 @@ const resetUserPasswordByIdService = async (
       };
     }
     const updatedUser = await userRepo.updateUserByIdRepo(userID, {
-      ...user,
       password: hashPassword,
-    });
+    } as IUser);
     if (!updatedUser) {
       return {
         message: "Failed to update password",
         success: false,
       };
     }
-    const sendMail = await sendEmail(
+    await sendEmail(
       user.email,
       "Password Reset",
       "Your password has been reset successfully",
